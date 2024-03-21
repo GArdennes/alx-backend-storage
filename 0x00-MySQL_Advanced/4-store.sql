@@ -1,4 +1,5 @@
--- creates a trigger that decreases the quantity of an item after adding a new order
+-- creates a trigger that decreases the quantity
+-- of an item after adding a new order
 DROP TRIGGER IF EXISTS update_stock;
 DELIMITER $$
 CREATE TRIGGER update_stock AFTER INSERT ON Orders
