@@ -19,7 +19,7 @@ def insert_school(mongo_collection, **kwargs):
     Raises:
         pymongo.errors.PyMongoError: If an error occurs during insertion.
     """
-    result = mongo_collection.insert_one(**kwargs)
+    result = mongo_collection.insert_one(kwargs)
     if result.inserted_id:
         return result.inserted_id
     else:
