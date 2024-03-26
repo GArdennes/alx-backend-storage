@@ -16,12 +16,13 @@ CREATE TABLE table_name (
   CONSTRAINT constraint_name table_constraint_definition
 );
 ```
-```table_name```: The name assigned to the table
-```column1, column2```: Each column is associated to its data type (e.g. INT, VARCHAR, etc)
-```constraint_name```: An optional name for the constraint
-```table_constraint_definition```: This defines table-level constraints like primary key or foreign key
+`table_name`: The name assigned to the table
+`column1, column2`: Each column is associated to its data type (e.g. INT, VARCHAR, etc)
+`constraint_name`: An optional name for the constraint
+`table_constraint_definition`: This defines table-level constraints like primary key or foreign key
 
 There are two main categories of constraints: column-level and table-level.
+
 **Column level Constraints**
 - NOT NULL
 - UNIQUE
@@ -42,9 +43,9 @@ CREATE TABLE Customers (
 );
 ```
 In this example:
-- ```customer_id```: is the primary key with auto-increment for unique identifiers
-- ```name``` and ```email```: columns with the constraint, cannot be NULL
-- ```phone_number```: column with the restriction of length 10 characters declared using the CHECK constraint
+- `customer_id`: is the primary key with auto-increment for unique identifiers
+- `name` and `email`: columns with the constraint, cannot be NULL
+- `phone_number`: column with the restriction of length 10 characters declared using the CHECK constraint
 
 Let’s consider a table named Products in an e-commerce database. 
 ```
@@ -64,7 +65,7 @@ When you query for products in a specific category, for instance:
 ```
 SELECT * FROM Products WHERE category = 'Electronics';
 ```
-The database engine can leverage on the index ```category```. Instead of scanning the entire table, it uses the index to quickly locate rows with “Electronics” in the category column.
+The database engine can leverage on the index `category`. Instead of scanning the entire table, it uses the index to quickly locate rows with “Electronics” in the category column.
 
 In MySQL, stored procedures and functions are both ways of encapsulating a set of SQL statements for reusability and modularity. Here are some key differences between the two:
 **Stored procedures**
@@ -116,7 +117,7 @@ FROM Products;
 
 A view in MySQL acts as a virtual table based on a pre-defined query. It doesn’t store data itself but presents a customized view of data from underlying tables. Views simply complex queries by hiding the underlying table structure and join operations from the user. Views can also pre-aggregate data, making it easier to perform calculations or summaries without writing complex joins every time.
 
-Here is an example of creating a view named ```active_customers``` that shows customers with a positive balance from the ```Customers``` and ```Orders``` tables:
+Here is an example of creating a view named `active_customers` that shows customers with a positive balance from the `Customers` and `Orders` tables:
 ```
 CREATE VIEW active_customers AS
 SELECT c.customer_id, c.name, c.email
@@ -133,7 +134,7 @@ SELECT * FROM active_customers;
 
 Triggers are stored programs that automatically execute in response to specific events (INSERT, UPDATE, DELETE) on a particular table. They are useful for automating tasks or enforcing data integrity rules. There are two main categories of triggers: BEFORE vs AFTER and ROW-Level vs Statement-Level.
 
-Here is an example of a trigger named ```update_stock``` that fires after a new order is inserted into the Orders table:
+Here is an example of a trigger named `update_stock` that fires after a new order is inserted into the Orders table:
 ```
 CREATE TRIGGER update_stock AFTER INSERT ON Orders
 FOR EACH ROW
@@ -144,7 +145,6 @@ BEGIN
 END;
 ```
 This trigger automatically updates the product stock in the Products table whenever a new order is placed, subtracting the ordered quantity from the available stock for the corresponding product.
-```
 
 ## Requirements
 1) All your files will be executed on Ubuntu 18.04 LTS using MySQL 5.7
