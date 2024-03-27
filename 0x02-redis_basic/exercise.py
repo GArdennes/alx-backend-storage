@@ -11,16 +11,12 @@ class Cache:
     """
     A simple cache
     """
-    def __init__(self, host="localhost", port=6379):
+    def __init__(self) -> None:
         """
         Initialization
         """
-        self.host = host
-        self.port = port
-        self._redis = redis.Redis(
-                host=self.host,
-                port=self.port)
-        self._redis.flushdb()
+        self._redis = redis.Redis()
+        self._redis.flushdb(True)
 
     def store(
             self,
