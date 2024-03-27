@@ -52,13 +52,7 @@ class Cache:
             if the key doesn't exist.
         """
         data = self._redis.get(key)
-        if data is None:
-            return None
-
-        if fn:
-            return fn(data)
-        else:
-            return data.decode("utf-8")
+        return fn(data) if fn is not None else data
 
     def get_str(self, key: str) -> str:
         """
@@ -70,4 +64,4 @@ class Cache:
         """
         Parametrizes get with integer conversion
         """
-        return self.get(key, int)
+        return self.get(key, lambda x: int(x))
