@@ -4,7 +4,7 @@ Exercise module
 """
 import redis
 import uuid
-from typing import Union, Optional, Callable
+from typing import Any, Union, Optional, Callable
 from functools import wraps
 
 
@@ -13,17 +13,15 @@ def count_calls(method: Callable) -> Callable:
     A decorator that counts calls to a method
     and stores the count in Redis.
     """
-    call_count = {}  # Use a dictionary to store call counts
-
     @wraps(method)
-    def wrapper(cache_instance: Cache, *args, **kwargs):
+    def wrapper(self, *args, **kwargs) -> Any:
         """
         Increments the call count for the method
         and calls the original method.
         """
-        key = method.__qualname__
-        call_count[key] = cache_instance._redis.incr(key) or 0
-        return method(cache_instance, *args, **kwargs)
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
     return wrapper
 
 
