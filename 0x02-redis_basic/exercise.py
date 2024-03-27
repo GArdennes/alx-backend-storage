@@ -5,6 +5,26 @@ Exercise module
 import redis
 import uuid
 from typing import Union, Optional, Callable
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """
+    A decorator that counts calls to a method
+    and stores the count in Redis.
+    """
+    call_count = {}  # Use a dictionary to store call counts
+
+    @wraps(method)
+    def wrapper(cache_instance: Cache, *args, **kwargs):
+        """
+        Increments the call count for the method
+        and calls the original method.
+        """
+        key = method.__qualname__
+        call_count[key] = cache_instance._redis.incr(key) or 0
+        return method(cache_instance, *args, **kwargs)
+    return wrapper
 
 
 class Cache:
@@ -18,10 +38,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb(True)
 
-    def store(
-            self,
-            data: Union[str, bytes, int, float]
-            ) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores data in the cache and returns the generated key
         """
@@ -32,36 +49,22 @@ class Cache:
     def get(
             self,
             key: str,
-            fn: Optional[
-                Callable[[bytes], Union[str, int]]
-                ] = None
-            ) -> Union[str, int, None]:
-        """
-        Converts data back to the desired format
-        using the provided function.
-
-        Args:
-            key: The key to retrieve data for.
-            fn: An optional function to convert the
-            retrieved value.
-
-        Returns:
-            The retrieved data converted to the desired
-            format (if a converter is provided),
-            otherwise the raw bytes, or None
-            if the key doesn't exist.
-        """
+            fn: Callable = None,
+            ) -> Union[str, bytes, int, float]:
+        '''
+        Retrieves a value from a Redis data storage.
+        '''
         data = self._redis.get(key)
         return fn(data) if fn is not None else data
 
     def get_str(self, key: str) -> str:
-        """
-        Parametrizes get with string conversion
-        """
+        '''
+        Retrieves a string value from a Redis data storage.
+        '''
         return self.get(key, lambda x: x.decode('utf-8'))
 
     def get_int(self, key: str) -> int:
-        """
-        Parametrizes get with integer conversion
-        """
+        '''
+        Retrieves an integer value from a Redis data storage.
+        '''
         return self.get(key, lambda x: int(x))
